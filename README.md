@@ -6,9 +6,12 @@
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/invenia/FTPServer.jl?svg=true)](https://ci.appveyor.com/project/invenia/FTPServer-jl)
 [![Codecov](https://codecov.io/gh/invenia/FTPServer.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/invenia/FTPServer.jl)
 
+A Julia interface for running a test FTP server with [pyftpdlib](https://pyftpdlib.readthedocs.io/en/latest/index.html).
 
 ## Usage
 
+Since this package is primarily intended for test ftp logic, we recommend using the `FTPServer.serve`
+do-block syntax to handle cleaning your test ftp server.
 ```
 using FTPClient
 using FTPServer

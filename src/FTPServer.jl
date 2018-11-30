@@ -26,7 +26,7 @@ const PERM = "elradfmwM"
 const DEBUG = false
 
 const SCRIPT = abspath(dirname(@__FILE__), "server.py")
-const ROOT = realpath(abspath(joinpath(dirname(dirname(@__FILE__)), "usr", "ftp")))
+const ROOT = abspath(joinpath(dirname(dirname(@__FILE__)), "usr", "ftp"))
 const HOMEDIR = joinpath(ROOT, "data")
 const CERT = joinpath(ROOT, "test.crt")
 const KEY = joinpath(ROOT, "test.key")
@@ -38,7 +38,7 @@ function __init__()
     Memento.register(LOGGER)
     copy!(pyopenssl_crypto, pyimport_conda("OpenSSL.crypto", "OpenSSL"))
     copy!(pyopenssl_SSL, pyimport_conda("OpenSSL.SSL", "OpenSSL"))
-    copy!(pyftpdlib_servers, pyimport_conda("pyftpdlib.servers", "pyftpdlib"))
+    copy!(pyftpdlib_servers, pyimport_conda("pyftpdlib.servers", "pyftpdlib", "invenia"))
 
     DEBUG && pylogging[:basicConfig](level=pylogging[:DEBUG])
     mkpath(HOMEDIR)

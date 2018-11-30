@@ -2,7 +2,7 @@ from OpenSSL import crypto, SSL
 from socket import gethostname
 from pprint import pprint
 from time import gmtime, mktime
-from os.path import exists, join
+from os.path import exists, join, realpath
 
 import logging
 import argparse
@@ -27,9 +27,9 @@ class TLSImplicit_FTPHandler(TLS_FTPHandler):
 
 def create_self_signed_cert(cert_dir, cert_file, key_file, hostname):
     # from https://gist.github.com/ril3y/1165038
-
-    if not exists(join(cert_dir, cert_file)) \
-            or not exists(join(cert_dir, key_file)):
+    cert_path = realpath(join(cert_dir, cert_file))
+    key_path = realpath(join(cert_dir, key_file))
+    if not exists(cert_path) or not exists(key_path):
 
         # create a key pair
         k = crypto.PKey()
@@ -45,10 +45,10 @@ def create_self_signed_cert(cert_dir, cert_file, key_file, hostname):
         cert.set_pubkey(k)
         cert.sign(k, 'sha1')
 
-        with open(join(cert_dir, cert_file), "wt") as fp:
-            fp.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
-        with open(join(cert_dir, key_file), "wt") as fp:
-            fp.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, k))
+        with open(cert_path, "wt") as fp:
+            fp.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert).decode('utf-8'))
+        with open(key_path, "wt") as fp:
+            fp.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, k).decode('utf-8'))
 
 
 
