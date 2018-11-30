@@ -1,4 +1,4 @@
-module FTPLib
+module FTPServer
 
 import Base: Process
 import Base: close
@@ -44,7 +44,7 @@ function __init__()
     mkpath(HOMEDIR)
 end
 
-mutable struct FTPServer
+mutable struct Server
     root::AbstractString
     port::Int
     username::AbstractString
@@ -54,7 +54,7 @@ mutable struct FTPServer
     process::Process
     io::IO
 
-     function FTPServer(
+     function Server(
         root::AbstractString=ROOT; username="", password="", permissions="elradfmwM",
         security::Symbol=:none,
     )
@@ -90,13 +90,24 @@ mutable struct FTPServer
     end
 end
 
-hostname(server::FTPServer) = "localhost"
-port(server::FTPServer) = server.port
-username(server::FTPServer) = server.username
-password(server::FTPServer) = server.password
-close(server::FTPServer) = kill(server.process)
 
-localpath(server::FTPServer, path::AbstractString) = joinpath(server.root, split(path, '/')...)
+function serve(f::Function, args...; kwargs...)
+    server = Server(args...; kwargs...)
+
+    try
+        f(server)
+    finally
+        close(server)
+    end
+end
+
+hostname(server::Server) = "localhost"
+port(server::Server) = server.port
+username(server::Server) = server.username
+password(server::Server) = server.password
+close(server::Server) = kill(server.process)
+
+localpath(server::Server, path::AbstractString) = joinpath(server.root, split(path, '/')...)
 
 function tempfile(path::AbstractString)
     content = randstring(rand(1:100))
@@ -114,13 +125,13 @@ function setup_root(dir::AbstractString)
 end
 
 function setup_server()
-    isdir(joinpath(FTPLib.ROOT, "data")) || setup_root(FTPLib.ROOT)
+    isdir(joinpath(FTPServer.ROOT, "data")) || setup_root(FTPServer.ROOT)
 end
 
 function teardown_server()
-    rm(FTPLib.ROOT, recursive=true)
-    isfile(FTPLib.CERT) && rm(FTPLib.CERT)
-    isfile(FTPLib.KEY) && rm(FTPLib.KEY)
+    rm(FTPServer.ROOT, recursive=true)
+    isfile(FTPServer.CERT) && rm(FTPServer.CERT)
+    isfile(FTPServer.KEY) && rm(FTPServer.KEY)
 end
 
 end # module

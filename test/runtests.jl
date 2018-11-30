@@ -1,51 +1,45 @@
 using Compat
 using Compat.Test
-using FTPLib
+using FTPServer
 using FTPClient
 
 
-@testset "FTPLib.jl" begin
+@testset "FTPServer.jl" begin
     @testset "no-ssl" begin
-        FTPLib.setup_server()
-        server = FTPLib.FTPServer()
+        FTPServer.setup_server()
 
-        opts = (
-            :hostname => FTPLib.hostname(server),
-            :port => FTPLib.port(server),
-            :username => FTPLib.username(server),
-            :password => FTPLib.password(server),
-        )
+        FTPServer.serve() do server
+            opts = (
+                :hostname => FTPServer.hostname(server),
+                :port => FTPServer.port(server),
+                :username => FTPServer.username(server),
+                :password => FTPServer.password(server),
+            )
 
-        try
             options = RequestOptions(; opts..., ssl=false)
             ctxt, resp = ftp_connect(options)
             @test resp.code == 226
-        finally
-            close(server)
         end
     end
     @testset "ssl - $mode" for mode in (:explicit, :implicit)
-        FTPLib.setup_server()
-        server = FTPLib.FTPServer(security=mode)
+        FTPServer.setup_server()
 
-        opts = (
-            :hostname => FTPLib.hostname(server),
-            :port => FTPLib.port(server),
-            :username => FTPLib.username(server),
-            :password => FTPLib.password(server),
-            :ssl => true,
-            :implicit => mode === :implicit,
-            :verify_peer => false,
-        )
+        FTPServer.serve(; security=mode) do server
+            opts = (
+                :hostname => FTPServer.hostname(server),
+                :port => FTPServer.port(server),
+                :username => FTPServer.username(server),
+                :password => FTPServer.password(server),
+                :ssl => true,
+                :implicit => mode === :implicit,
+                :verify_peer => false,
+            )
 
-        try
             options = RequestOptions(; opts...)
             # Test implicit/exlicit ftp ssl scheme is set correctly
             @test options.uri.scheme == (mode === :implicit ? "ftps" : "ftpes")
             ctxt, resp = ftp_connect(options)
             @test resp.code == 226
-        finally
-            close(server)
         end
     end
 
