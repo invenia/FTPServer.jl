@@ -26,7 +26,7 @@ const PERM = "elradfmwM"
 const DEBUG = false
 
 const SCRIPT = abspath(dirname(@__FILE__), "server.py")
-const ROOT = abspath(joinpath(dirname(dirname(@__FILE__)), "usr", "ftp"))
+const ROOT = abspath(joinpath(dirname(dirname(@__FILE__)), "deps", "usr", "ftp"))
 const HOMEDIR = joinpath(ROOT, "data")
 const CERT = joinpath(ROOT, "test.crt")
 const KEY = joinpath(ROOT, "test.key")
@@ -109,14 +109,6 @@ close(server::Server) = kill(server.process)
 
 localpath(server::Server, path::AbstractString) = joinpath(server.root, split(path, '/')...)
 
-function tempfile(path::AbstractString)
-    content = randstring(rand(1:100))
-    open(path, "w") do fp
-        write(fp, content)
-    end
-    return content
-end
-
 function setup_root(dir::AbstractString)
     mkdir(dir)
     tempfile(joinpath(dir, "test_download.txt"))
@@ -124,12 +116,12 @@ function setup_root(dir::AbstractString)
     mkdir(joinpath(dir, "test_directory"))
 end
 
-function setup_server()
+function init()
     isdir(joinpath(FTPServer.ROOT, "data")) || setup_root(FTPServer.ROOT)
 end
 
-function teardown_server()
-    rm(FTPServer.ROOT, recursive=true)
+function cleanup()
+    rm(FTPServer.HOMEDIR, recursive=true)
     isfile(FTPServer.CERT) && rm(FTPServer.CERT)
     isfile(FTPServer.KEY) && rm(FTPServer.KEY)
 end

@@ -16,6 +16,10 @@ do-block syntax to handle cleaning your test ftp server.
 using FTPClient
 using FTPServer
 
+# Initialize a root directory to run servers from
+FTPServer.init()
+
+# Run some tests
 FTPServer.serve() do server
     opts = (
         :hostname => FTPServer.hostname(server),
@@ -28,4 +32,7 @@ FTPServer.serve() do server
     ctxt, resp = ftp_connect(options)
     ...
 end
+
+# Cleanup the shared FTP directory
+FTPServer.cleanup()
 ```

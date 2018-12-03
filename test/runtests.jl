@@ -5,9 +5,9 @@ using FTPClient
 
 
 @testset "FTPServer.jl" begin
-    @testset "no-ssl" begin
-        FTPServer.setup_server()
+    FTPServer.init()
 
+    @testset "no-ssl" begin
         FTPServer.serve() do server
             opts = (
                 :hostname => FTPServer.hostname(server),
@@ -22,8 +22,6 @@ using FTPClient
         end
     end
     @testset "ssl - $mode" for mode in (:explicit, :implicit)
-        FTPServer.setup_server()
-
         FTPServer.serve(; security=mode) do server
             opts = (
                 :hostname => FTPServer.hostname(server),
@@ -43,4 +41,9 @@ using FTPClient
         end
     end
 
+    FTPServer.cleanup()
+
+    @test !isfile(FTPServer.CERT)
+    @test !isfile(FTPServer.KEY)
+    @test !isdir(FTPServer.HOMEDIR)
 end
