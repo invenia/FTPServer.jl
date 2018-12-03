@@ -20,7 +20,7 @@ const pyftpdlib_servers = PyNULL()
 # Defaults from pyftpdlib example
 const USER = "user"
 const PASSWD = "12345"
-const HOST="localhost"
+const HOST = "localhost"
 const PORT = 2021
 const PERM = "elradfmwM"
 const DEBUG = false
