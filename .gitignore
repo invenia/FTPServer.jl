@@ -5,3 +5,4 @@ Manifest.toml
 *.jl.cov
 *.jl.*.cov
 *.jl.mem
+/deps/usr

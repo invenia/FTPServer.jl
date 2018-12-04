@@ -1,13 +1,13 @@
-using Documenter, FTPLib
+using Documenter, FTPServer
 
 makedocs(;
-    modules=[FTPLib],
+    modules=[FTPServer],
     format=:html,
     pages=[
         "Home" => "index.md",
     ],
-    repo="https://github.com/invenia/FTPLib.jl/blob/{commit}{path}#L{line}",
-    sitename="FTPLib.jl",
+    repo="https://github.com/invenia/FTPServer.jl/blob/{commit}{path}#L{line}",
+    sitename="FTPServer.jl",
     authors="Invenia Technical Computing Corporation",
     assets=[
         "assets/invenia.css",
@@ -16,9 +16,9 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/invenia/FTPLib.jl",
+    repo="github.com/invenia/FTPServer.jl",
     target="build",
-    julia="1.0",
+    julia="0.6",
     deps=nothing,
     make=nothing,
 )

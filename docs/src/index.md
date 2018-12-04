@@ -1,8 +1,8 @@
-# FTPLib.jl
+# FTPServer.jl
 
 ```@index
 ```
 
 ```@autodocs
-Modules = [FTPLib]
+Modules = [FTPServer]
 ```
