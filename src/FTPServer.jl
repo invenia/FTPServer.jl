@@ -46,7 +46,7 @@ end
 
 
 mutable struct Server
-    root::AbstractString
+    homedir::AbstractString
     port::Int
     username::AbstractString
     password::AbstractString
@@ -57,12 +57,12 @@ mutable struct Server
 end
 
 """
-    Server(root=$ROOT; username=$USER, password=$PASSWD, permissions=$PERM, security=:none)
+    Server(homedir=$HOMEDIR; username=$USER, password=$PASSWD, permissions=$PERM, security=:none)
 
 A Server stores settings for create an pyftpdlib server.
 
 # Arguments
-- `root::AbstractString`: Directory where you want store credentials and data for the
+- `homedir::AbstractString`: Directory where you want store to store your data for the
   test server.
 
 # Keywords
@@ -74,7 +74,7 @@ A Server stores settings for create an pyftpdlib server.
   FTPS connection.
 """
 function Server(
-    root::AbstractString=ROOT; username="", password="", permissions="elradfmwM",
+    homedir::AbstractString=HOMEDIR; username="", password="", permissions="elradfmwM",
     security::Symbol=:none,
 )
     if isempty(username)
@@ -84,7 +84,7 @@ function Server(
         password = randstring(40)
     end
 
-    cmd = `$PYTHON_CMD $SCRIPT $username $password $root --permissions $permissions`
+    cmd = `$PYTHON_CMD $SCRIPT $username $password $homedir --permissions $permissions`
     if security != :none
         cmd = `$cmd --tls $security --cert-file $CERT --key-file $KEY --gen-certs TRUE`
     end
@@ -101,7 +101,7 @@ function Server(
     m = match(r"starting FTP.* server on .*:(?<port>\d+)", line)
     if m !== nothing
         port = parse(Int, m[:port])
-        Server(root, port, username, password, permissions, security, process, io)
+        Server(homedir, port, username, password, permissions, security, process, io)
     else
         kill(process)
         error(line, String(readavailable(io)))  # Display traceback
@@ -130,7 +130,7 @@ username(server::Server) = server.username
 password(server::Server) = server.password
 close(server::Server) = kill(server.process)
 
-localpath(server::Server, path::AbstractString) = joinpath(server.root, split(path, '/')...)
+localpath(server::Server, path::AbstractString) = joinpath(server.homedir, split(path, '/')...)
 
 function tempfile(path::AbstractString)
     content = randstring(rand(1:100))
