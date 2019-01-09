@@ -1,7 +1,4 @@
-from OpenSSL import crypto, SSL
-from socket import gethostname
-from pprint import pprint
-from time import gmtime, mktime
+from OpenSSL import crypto
 from os.path import exists, join, realpath
 
 import logging
