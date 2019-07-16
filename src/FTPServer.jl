@@ -3,9 +3,6 @@ module FTPServer
 import Base: Process
 import Base: close
 using Conda
-using Compat
-using Compat: @__MODULE__
-using Compat.Random: randstring
 using Memento
 using PyCall
 const LOGGER = getlogger(@__MODULE__)
@@ -31,7 +28,7 @@ const HOMEDIR = joinpath(ROOT, "data")
 const CERT = joinpath(ROOT, "test.crt")
 const KEY = joinpath(ROOT, "test.key")
 const PYTHON_CMD = joinpath(
-    Conda.PYTHONDIR, Compat.Sys.iswindows() ? "python.exe" : "python"
+    Conda.PYTHONDIR, Sys.iswindows() ? "python.exe" : "python"
 )
 
 function __init__()

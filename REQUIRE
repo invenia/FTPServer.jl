@@ -1,5 +1,4 @@
-julia 0.7
-Compat
+julia 1.0
 Conda
 Memento
 PyCall
