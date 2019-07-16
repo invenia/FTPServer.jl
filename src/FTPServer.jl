@@ -5,6 +5,7 @@ import Base: close
 using Conda
 using Memento
 using PyCall
+using Random: randstring
 const LOGGER = getlogger(@__MODULE__)
 
 const pylogging = PyNULL()
