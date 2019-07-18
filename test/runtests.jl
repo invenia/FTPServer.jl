@@ -1,8 +1,6 @@
-using Compat
-using Compat.Test
 using FTPServer
 using FTPClient
-
+using Test
 
 @testset "FTPServer.jl" begin
     FTPServer.init()

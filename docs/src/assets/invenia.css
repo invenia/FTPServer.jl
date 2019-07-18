@@ -61,15 +61,3 @@ code .hljs-keyword {
 pre, code {
     font-family: "Liberation Mono", "Consolas", "DejaVu Sans Mono", "Ubuntu Mono", "Courier New", "andale mono", "lucida console", monospace;
 }
-
-/* mkdocs (old) */
-
-/*.navbar-default {
-    background-color: #194E82;
-}
-
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-    background-color: #4595D1;
-}*/
