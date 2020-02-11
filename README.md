@@ -12,7 +12,8 @@ A Julia interface for running a test FTP server with [pyftpdlib](https://pyftpdl
 
 Since this package is primarily intended for test ftp logic, we recommend using the `FTPServer.serve`
 do-block syntax to handle cleaning your test ftp server.
-```
+
+```julia
 using FTPClient
 using FTPServer
 
