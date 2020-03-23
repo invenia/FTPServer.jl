@@ -26,8 +26,8 @@ def create_self_signed_cert(cert_dir, cert_file, key_file, hostname):
     # from https://gist.github.com/ril3y/1165038
     cert_path = realpath(join(cert_dir, cert_file))
     key_path = realpath(join(cert_dir, key_file))
-    if not exists(cert_path) or not exists(key_path):
 
+    if not exists(cert_path) or not exists(key_path):
         # create a key pair
         k = crypto.PKey()
         k.generate_key(crypto.TYPE_RSA, 1024)
@@ -60,7 +60,6 @@ def main():
         )
 
     if args.passive_ports:
-
         passive = tuple(int(p) for p in args.passive_ports.split("-"))
         if len(passive) > 2:
             raise ValueError("Passive port needs to be a range of two values")
@@ -114,7 +113,7 @@ def parse_args():
     )
     parser.add_argument("--cert-file", type=str, default="test.crt")
     parser.add_argument("--key-file", type=str, default="test.key")
-    parser.add_argument("--debug", type=bool, default=False)
+    parser.add_argument("--debug", action="store_true")
     parser.add_argument("--gen-certs-dir", type=str, default="")
 
     return parser.parse_args()

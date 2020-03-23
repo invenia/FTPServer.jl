@@ -8,7 +8,6 @@ using PyCall
 using Random: randstring
 const LOGGER = getlogger(@__MODULE__)
 
-const pylogging = PyNULL()
 const pyopenssl_crypto = PyNULL()
 const pyopenssl_SSL = PyNULL()
 const pyftpdlib_authorizers = PyNULL()
@@ -37,8 +36,6 @@ function __init__()
     copy!(pyopenssl_crypto, pyimport_conda("OpenSSL.crypto", "OpenSSL"))
     copy!(pyopenssl_SSL, pyimport_conda("OpenSSL.SSL", "OpenSSL"))
     copy!(pyftpdlib_servers, pyimport_conda("pyftpdlib.servers", "pyftpdlib", "invenia"))
-
-    DEBUG && pylogging[:basicConfig](level=pylogging[:DEBUG])
     mkpath(ROOT)
 end
 
@@ -55,7 +52,10 @@ mutable struct Server
 end
 
 """
-    Server(homedir=$HOMEDIR; username=$USER, password=$PASSWD, permissions=$PERM, security=:none)
+    Server(
+        homedir=$HOMEDIR;
+        username=$USER, password=$PASSWD, permissions=$PERM, security=:none,
+    )
 
 A Server stores settings for create an pyftpdlib server.
 
@@ -67,13 +67,13 @@ A Server stores settings for create an pyftpdlib server.
 - `username`: Default login username
 - `password`: Default login password
 - `permission`: Default user read/write permissions
-- `security`: Security method to use for connecting (options: `:none`, `:implicity`, `:explicity`).
-  Passing in `:none` will use FTP and passing in `:implicity` or `:explicity` will use the appropriate
+- `security`: Security method to use for connecting (options: `:none`, `:implicit`, `:explicit`).
+  Passing in `:none` will use FTP and passing in `:implicit` or `:explicit` will use the appropriate
   FTPS connection.
 """
 function Server(
-    homedir::AbstractString=HOMEDIR; username="", password="", permissions="elradfmwM",
-    security::Symbol=:none,
+    homedir::AbstractString=HOMEDIR;
+    username="", password="", permissions="elradfmwM", security::Symbol=:none,
 )
     if isempty(username)
         username = string("user", rand(1:9999))
@@ -84,14 +84,22 @@ function Server(
 
     cmd = `$PYTHON_CMD $SCRIPT $username $password $homedir --permissions $permissions`
     if security != :none
-        cmd = `$cmd --tls $security --cert-file $CERT --key-file $KEY --gen-certs TRUE`
+        cmd = `$cmd --tls $security --cert-file $CERT --key-file $KEY --gen-certs-dir $ROOT`
     end
-    io = Pipe()
 
-    # Note: open(::AbstractCmd, ...) won't work here as it doesn't allow us to capture STDERR.
+    if DEBUG
+        cmd = `$cmd --debug`
+    end
+
+    # Note: open(::AbstractCmd, ...) won't work here as it doesn't allow us to capture
+    # STDERR.
+    io = Pipe()
     process = run(pipeline(cmd, stdout=io, stderr=io), wait=false)
 
     line = readline(io)
+    while !occursin("starting FTP", line)
+        line = readline(io)
+    end
     m = match(r"starting FTP.* server on .*:(?<port>\d+)", line)
     if m !== nothing
         port = parse(Int, m[:port])
