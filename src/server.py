@@ -40,7 +40,7 @@ def create_self_signed_cert(cert_dir, cert_file, key_file, hostname):
         cert.gmtime_adj_notAfter(10 * 365 * 24 * 60 * 60)
         cert.set_issuer(cert.get_subject())
         cert.set_pubkey(k)
-        cert.sign(k, "sha1")
+        cert.sign(k, "sha256")
 
         with open(cert_path, "wt") as fp:
             fp.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert).decode("utf-8"))
