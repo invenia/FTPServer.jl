@@ -129,13 +129,13 @@ def parse_args():
     parser.add_argument(
         "--cert-file",
         type=lambda p: Path(p).absolute(),
-        default=Path("test.crt"),
+        default="test.crt",
         help="Path to the certificate file",
     )
     parser.add_argument(
         "--key-file",
         type=lambda p: Path(p).absolute(),
-        default=Path("test.key"),
+        default="test.key",
         help="Path to the key file",
     )
     parser.add_argument(

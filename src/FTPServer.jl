@@ -59,23 +59,23 @@ end
         debug_command::Bool=false,
     )
 
-A Server stores settings for create an pyftpdlib server.
+A Server stores settings to create a pyftpdlib server.
 
 # Arguments
-- `homedir::AbstractString=$HOMEDIR`: Directory where you want store to store your data for
-  the test server.
+- `homedir::AbstractString=$HOMEDIR`: Directory where you want to store your data for the
+  test server.
 
 # Keywords
 - `username::AbstractString=""`: Default login username. Defaults to 'userXXXX' where 'XXXX'
   is a number between 1 and 9999.
-- `password::AbstractString`: Default login password. Defalts to a random string of 40
+- `password::AbstractStringi=""`: Default login password. Defalts to a random string of 40
   characters.
 - `permission::AbstractString=$PERM`: Default user read/write permissions.
 - `security::Symbol=:none`: Security method to use for connecting (options: `:none`,
   `:implicit`, `:explicit`). Passing in `:none` will use FTP and passing in `:implicit` or
   `:explicit` will use the appropriate FTPS connection.
-- `force_gen_certs::Bool=true`: Force regenerate certificate and key file.
-- `debug_command::Bool=false`: Print out the python command being used for debugging
+- `force_gen_certs::Bool=true`: Force regeneration of certificate and key file.
+- `debug_command::Bool=false`: Print out the python command being used, for debugging
   purposes.
 """
 function Server(
