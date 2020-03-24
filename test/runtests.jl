@@ -1,5 +1,7 @@
 using FTPServer
 using FTPClient
+using Memento
+using Memento.TestUtils: @test_log
 using Test
 
 @testset "FTPServer.jl" begin
@@ -19,8 +21,16 @@ using Test
             @test resp.code == 226
         end
     end
-    @testset "ssl - $mode" for mode in (:explicit, :implicit)
-        FTPServer.serve(; security=mode) do server
+    @testset "no-ssl debug true" begin
+        @test_log(
+            FTPServer.LOGGER,
+            "info",
+            r"^Running Command:.*",
+            FTPServer.Server(; debug_command=true),
+        )
+    end
+    @testset "ssl - $mode - $gen_cert" for mode in (:explicit, :implicit), gen_cert in (true, false)
+        FTPServer.serve(; security=mode, force_gen_certs=gen_cert) do server
             opts = (
                 :hostname => FTPServer.hostname(server),
                 :port => FTPServer.port(server),

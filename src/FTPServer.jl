@@ -15,12 +15,8 @@ const pyftpdlib_handlers = PyNULL()
 const pyftpdlib_servers = PyNULL()
 
 # Defaults from pyftpdlib example
-const USER = "user"
-const PASSWD = "12345"
 const HOST = "localhost"
-const PORT = 2021
 const PERM = "elradfmwM"
-const DEBUG = false
 
 const SCRIPT = abspath(dirname(@__FILE__), "server.py")
 const ROOT = abspath(joinpath(dirname(dirname(@__FILE__)), "deps", "usr", "ftp"))
@@ -33,6 +29,7 @@ const PYTHON_CMD = joinpath(
 
 function __init__()
     Memento.register(LOGGER)
+
     copy!(pyopenssl_crypto, pyimport_conda("OpenSSL.crypto", "OpenSSL"))
     copy!(pyopenssl_SSL, pyimport_conda("OpenSSL.SSL", "OpenSSL"))
     copy!(pyftpdlib_servers, pyimport_conda("pyftpdlib.servers", "pyftpdlib", "invenia"))
@@ -53,27 +50,42 @@ end
 
 """
     Server(
-        homedir=$HOMEDIR;
-        username=$USER, password=$PASSWD, permissions=$PERM, security=:none,
+        homedir::AbstractString=$HOMEDIR;
+        username::AbstractString="",
+        password::AbstractString="",
+        permissions::AbstractString=$PERM,
+        security::Symbol=:none,
+        force_gen_certs::Bool=true,
+        debug_command::Bool=false,
     )
 
 A Server stores settings for create an pyftpdlib server.
 
 # Arguments
-- `homedir::AbstractString`: Directory where you want store to store your data for the
-  test server.
+- `homedir::AbstractString=$HOMEDIR`: Directory where you want store to store your data for
+  the test server.
 
 # Keywords
-- `username`: Default login username
-- `password`: Default login password
-- `permission`: Default user read/write permissions
-- `security`: Security method to use for connecting (options: `:none`, `:implicit`, `:explicit`).
-  Passing in `:none` will use FTP and passing in `:implicit` or `:explicit` will use the appropriate
-  FTPS connection.
+- `username::AbstractString=""`: Default login username. Defaults to 'userXXXX' where 'XXXX'
+  is a number between 1 and 9999.
+- `password::AbstractString`: Default login password. Defalts to a random string of 40
+  characters.
+- `permission::AbstractString=$PERM`: Default user read/write permissions.
+- `security::Symbol=:none`: Security method to use for connecting (options: `:none`,
+  `:implicit`, `:explicit`). Passing in `:none` will use FTP and passing in `:implicit` or
+  `:explicit` will use the appropriate FTPS connection.
+- `force_gen_certs::Bool=true`: Force regenerate certificate and key file.
+- `debug_command::Bool=false`: Print out the python command being used for debugging
+  purposes.
 """
 function Server(
     homedir::AbstractString=HOMEDIR;
-    username="", password="", permissions="elradfmwM", security::Symbol=:none,
+    username::AbstractString="",
+    password::AbstractString="",
+    permissions::AbstractString=PERM,
+    security::Symbol=:none,
+    force_gen_certs::Bool=true,
+    debug_command::Bool=false,
 )
     if isempty(username)
         username = string("user", rand(1:9999))
@@ -84,11 +96,18 @@ function Server(
 
     cmd = `$PYTHON_CMD $SCRIPT $username $password $homedir --permissions $permissions`
     if security != :none
-        cmd = `$cmd --tls $security --cert-file $CERT --key-file $KEY --gen-certs-dir $ROOT`
+        cmd = `$cmd --tls $security --cert-file $CERT --key-file $KEY`
+
+        if force_gen_certs
+            cmd = `$cmd --force-gen-certs`
+        end
     end
 
-    if DEBUG
-        cmd = `$cmd --debug`
+    # If we're having issues with the above command, it can be useful to print it out so we
+    # can run the command against the python script itself to see if it gives us any extra
+    # insight.
+    if debug_command
+        info(LOGGER, "Running Command: $cmd")
     end
 
     # Note: open(::AbstractCmd, ...) won't work here as it doesn't allow us to capture
@@ -96,11 +115,14 @@ function Server(
     io = Pipe()
     process = run(pipeline(cmd, stdout=io, stderr=io), wait=false)
 
+    # Grab the Port value from the python script output
     line = readline(io)
     while !occursin("starting FTP", line)
         line = readline(io)
     end
     m = match(r"starting FTP.* server on .*:(?<port>\d+)", line)
+
+    # If we found the port, store the server data in an object, else show an error
     if m !== nothing
         port = parse(Int, m[:port])
         Server(homedir, port, username, password, permissions, security, process, io)
@@ -126,13 +148,15 @@ function serve(f::Function, args...; kwargs...)
     end
 end
 
-hostname(server::Server) = "localhost"
+hostname(server::Server) = HOST
 port(server::Server) = server.port
 username(server::Server) = server.username
 password(server::Server) = server.password
 close(server::Server) = kill(server.process)
 
-localpath(server::Server, path::AbstractString) = joinpath(server.homedir, split(path, '/')...)
+localpath(server::Server, path::AbstractString) = joinpath(
+    server.homedir, split(path, '/')...
+)
 
 function tempfile(path::AbstractString)
     content = randstring(rand(1:100))
