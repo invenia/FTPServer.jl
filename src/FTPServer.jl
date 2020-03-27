@@ -29,7 +29,6 @@ const PYTHON_CMD = joinpath(
 
 function __init__()
     Memento.register(LOGGER)
-
     copy!(pyopenssl_crypto, pyimport_conda("OpenSSL.crypto", "OpenSSL"))
     copy!(pyopenssl_SSL, pyimport_conda("OpenSSL.SSL", "OpenSSL"))
     copy!(pyftpdlib_servers, pyimport_conda("pyftpdlib.servers", "pyftpdlib", "invenia"))

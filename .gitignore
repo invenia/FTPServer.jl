@@ -6,4 +6,5 @@ Manifest.toml
 *.jl.*.cov
 *.jl.mem
 /deps/usr
+/deps/build.log
 /Manifest.toml
