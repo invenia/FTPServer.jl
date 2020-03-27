@@ -14,16 +14,10 @@ arch:
 env:
   global:
     - PYTHON=""
-  matrix:
     - CONDA_JL_VERSION="3"  # Documentation stage will use the first variable set
-    - CONDA_JL_VERSION="2"
 jobs:
   allow_failures:
     - julia: nightly
-
-    # Missing packages on Windows
-    - env: CONDA_JL_VERSION="2"
-      os: windows
 
   fast_finish: true
 
