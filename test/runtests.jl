@@ -1,8 +1,18 @@
-using FTPServer
 using FTPClient
+using FTPServer
+using FTPServer: Server, serve, username, password, hostname, port, HOMEDIR
 using Memento
 using Memento.TestUtils: @test_log
 using Test
+
+
+function uri(server::Server; ftp_type::String="ftp")
+    string(
+        "$ftp_type://$(username(server)):$(password(server))",
+        "@$(hostname(server)):$(port(server))",
+    )
+end
+
 
 @testset "FTPServer.jl" begin
     FTPServer.init()
@@ -49,9 +59,20 @@ using Test
         end
     end
 
+    @testset "openssl 1.1.1e" begin
+        FTPServer.serve(".", security=:implicit) do server
+            ftp = FTP(uri(server; ftp_type="ftps"), verify_peer=false)
+            # With OpenSSL 1.1.1e this will fail due to a new EOF change that was added.
+            # https://github.com/openssl/openssl/issues/11381
+            # https://github.com/openssl/openssl/issues/11378
+            @test_broken upload(ftp, "$HOMEDIR/test_download.txt", "/FOO")
+        end
+    end
+
     FTPServer.cleanup()
 
     @test !isfile(FTPServer.CERT)
     @test !isfile(FTPServer.KEY)
     @test !isdir(FTPServer.HOMEDIR)
+
 end
