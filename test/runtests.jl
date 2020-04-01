@@ -1,6 +1,6 @@
 using FTPClient
 using FTPServer
-using FTPServer: Server, serve, username, password, hostname, port, HOMEDIR, uri
+using FTPServer: HOMEDIR, uri
 using Memento
 using Memento.TestUtils: @test_log
 using Test

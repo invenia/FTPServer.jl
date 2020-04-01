@@ -209,9 +209,9 @@ Create an FTP URI from an FTP server object.
 - `server::Server`: FTPServer object
 """
 function uri(server::Server)
-    ftp_type = if server.security == :implicit
+    ftp_type = if server.security === :implicit
         "ftps"
-    server.security == :explicit
+    server.security === :explicit
         "ftpes"
     else
         "ftp"
