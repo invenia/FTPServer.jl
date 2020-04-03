@@ -1,7 +1,7 @@
 name = "FTPServer"
 uuid = "9c2b0ca7-0fb3-5789-8f1a-7604e426024c"
 author = "Invenia Technical Computing Corperation"
-version = "0.2.1"
+version = "0.2.2"
 
 [deps]
 Conda = "8f4d0f93-b110-5947-807f-2305c1781a2d"
@@ -11,7 +11,7 @@ Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 
 [compat]
 Conda = "1.3"
-Memento = "1"
+Memento = "0.12, 0.13, 1"
 PyCall = "1.91"
 julia = "1"
 
