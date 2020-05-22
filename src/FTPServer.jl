@@ -36,7 +36,7 @@ function __init__()
     # Note: For `pyftpdlib` we'll specify an exact version to make behaviour of FTPServer.jl
     # consistent when rolling back to an earlier version.
     # For details see: https://github.com/invenia/FTPClient.jl/issues/91#issuecomment-632698841
-    copy!(pyftpdlib_servers, pyimport_conda("pyftpdlib.servers", "pyftpdlib==1.5.4", "invenia"))
+    copy!(pyftpdlib_servers, pyimport_conda("pyftpdlib.servers", "pyftpdlib==1.5.6", "invenia"))
 
     mkpath(ROOT)
 end
