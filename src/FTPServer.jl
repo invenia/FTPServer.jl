@@ -29,9 +29,15 @@ const PYTHON_CMD = joinpath(
 
 function __init__()
     Memento.register(LOGGER)
+
     copy!(pyopenssl_crypto, pyimport_conda("OpenSSL.crypto", "OpenSSL"))
     copy!(pyopenssl_SSL, pyimport_conda("OpenSSL.SSL", "OpenSSL"))
-    copy!(pyftpdlib_servers, pyimport_conda("pyftpdlib.servers", "pyftpdlib", "invenia"))
+
+    # Note: For `pyftpdlib` we'll specify an exact version to make behaviour of FTPServer.jl
+    # consistent when rolling back to an earlier version.
+    # For details see: https://github.com/invenia/FTPClient.jl/issues/91#issuecomment-632698841
+    copy!(pyftpdlib_servers, pyimport_conda("pyftpdlib.servers", "pyftpdlib==1.5.4", "invenia"))
+
     mkpath(ROOT)
 end
 
