@@ -23,9 +23,6 @@ const ROOT = abspath(joinpath(dirname(dirname(@__FILE__)), "deps", "usr", "ftp")
 const HOMEDIR = joinpath(ROOT, "data")
 const CERT = joinpath(ROOT, "test.crt")
 const KEY = joinpath(ROOT, "test.key")
-const PYTHON_CMD = joinpath(
-    Conda.PYTHONDIR, Sys.iswindows() ? "python.exe" : "python"
-)
 
 function __init__()
     Memento.register(LOGGER)
@@ -99,7 +96,8 @@ function Server(
         password = randstring(40)
     end
 
-    cmd = `$PYTHON_CMD $SCRIPT $username $password $homedir --permissions $permissions`
+    python = PyCall.current_python()
+    cmd = `$python $SCRIPT $username $password $homedir --permissions $permissions`
     if security != :none
         cmd = `$cmd --tls $security --cert-file $CERT --key-file $KEY`
 
