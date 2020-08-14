@@ -11,7 +11,7 @@ A Julia interface for running a test FTP server with [pyftpdlib](https://pyftpdl
 
 FTPServer makes use of PyCall for running the FTP server.
 It's recommended that you use [`PYTHON=""`](https://github.com/JuliaPy/PyCall.jl#specifying-the-python-version) so that Julia uses its own Python distribution.
-However, if you wish to specify a system Python you'll to at least use Python 3 and install the Python packages `pyopenssl` and `pyftpdlib`.
+However, if you wish to specify a system Python you will need to use at least Python 3 and install the Python packages `pyopenssl` and `pyftpdlib`.
 
 ## Usage
 
