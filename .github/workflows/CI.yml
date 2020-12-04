@@ -35,12 +35,13 @@ jobs:
           - os: ubuntu-latest
             version: 1
             arch: x86
-          # Note: Conda.jl cannot be used on ARM currently which means we have to use a system Python install
-          - os: ubuntu-latest
-            arch: arm64
-            version: 1
-            env:
-              SYS_PYTHON: ''
+          # Arm64 currently not supported by julia-actions/setup-julia
+          ## Note: Conda.jl cannot be used on ARM currently which means we have to use a system Python install
+          ##- os: ubuntu-latest
+          ##  arch: arm64
+          ##  version: 1
+          ##  env:
+          ##    SYS_PYTHON: ''
     steps:
       - uses: actions/checkout@v2
       - uses: julia-actions/setup-julia@v1
