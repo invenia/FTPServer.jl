@@ -2,7 +2,7 @@
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://invenia.github.io/FTPServer.jl/stable)
 [![Latest](https://img.shields.io/badge/docs-latest-blue.svg)](https://invenia.github.io/FTPServer.jl/latest)
-[![Build Status](https://travis-ci.com/invenia/FTPServer.jl.svg?branch=master)](https://travis-ci.com/invenia/FTPServer.jl)
+[![CI](https://github.com/Invenia/FTPServer.jl/workflows/CI/badge.svg)](https://github.com/Invenia/FTPServer.jl/actions?query=workflow%3ACI)
 [![Codecov](https://codecov.io/gh/invenia/FTPServer.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/invenia/FTPServer.jl)
 
 A Julia interface for running a test FTP server with [pyftpdlib](https://pyftpdlib.readthedocs.io/en/latest/index.html).
