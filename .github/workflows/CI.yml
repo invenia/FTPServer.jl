@@ -50,6 +50,7 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip setuptools
           python3 -m pip install pyopenssl pyftpdlib
+      # Windows uses different python syntax
       - if: matrix.os == 'windows-latest'
         run: |
           py -3 -m pip install --upgrade pip setuptools
@@ -99,6 +100,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+          architecture: 'x64'
+      - run: |
+          python3 -m pip install --upgrade pip setuptools
+          python3 -m pip install pyopenssl pyftpdlib
       - uses: julia-actions/setup-julia@v1
         with:
           version: '1'
