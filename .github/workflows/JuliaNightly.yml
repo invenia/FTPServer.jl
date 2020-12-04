@@ -13,6 +13,10 @@ jobs:
         with:
           version: nightly
           arch: x64
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+          architecture: 'x64'
       - uses: actions/cache@v1
         env:
           cache-name: cache-artifacts

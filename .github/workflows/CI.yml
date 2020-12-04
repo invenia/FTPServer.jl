@@ -41,6 +41,11 @@ jobs:
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
+      - uses: actions/setup-python@v2
+        if: ${{ matrix.os }} == 'ubuntu-latest'
+        with:
+          python-version: "3.8"
+          architecture: ${{ matrix.arch }}
       - uses: actions/cache@v1
         env:
           cache-name: cache-artifacts
