@@ -44,6 +44,9 @@ jobs:
           ##    SYS_PYTHON: ''
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.6  # pyftpdlib currently only supports versions up to 3.6
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
