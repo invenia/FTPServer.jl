@@ -43,6 +43,10 @@ jobs:
           ##  env:
           ##    SYS_PYTHON: ''
     steps:
+      - name: setup pyenv 3.8.10
+        uses: gabrielfalcao/pyenv-action@v8
+        with:
+          default: 3.8.10
       - uses: actions/checkout@v2
       - uses: julia-actions/setup-julia@v1
         with:
