@@ -55,7 +55,7 @@ jobs:
           arch: ${{ matrix.arch }}
       - if: matrix.os != 'windows-latest'
         run: |
-          python3.8 -m pip install --upgrade pip setuptools
+          python3.8 -m pip install --upgrade pip setuptools wheel
           python3.8 -m pip install pyopenssl pyftpdlib
       - if: matrix.os != 'windows-latest' && matrix.arch != 'x86'
         run: |
@@ -66,7 +66,7 @@ jobs:
       # Windows uses different python syntax
       - if: matrix.os == 'windows-latest'
         run: |
-          py -3.8 -m pip install --upgrade pip setuptools
+          py -3.8 -m pip install --upgrade pip setuptools wheel
           py -3.8 -m pip install pyopenssl pyftpdlib
           echo "PYTHON=$env:pythonLocation\python.exe" >> $env:GITHUB_ENV
       - uses: actions/cache@v2
@@ -111,7 +111,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          python3 -m pip install --upgrade pip setuptools
+          python3 -m pip install --upgrade pip setuptools wheel
           python3 -m pip install pyopenssl pyftpdlib
       - uses: julia-actions/setup-julia@v1
         with:

@@ -14,7 +14,7 @@ jobs:
           version: nightly
           arch: x64
       - run: |
-          python3 -m pip install --upgrade pip setuptools
+          python3 -m pip install --upgrade pip setuptools wheel
           python3 -m pip install pyopenssl pyftpdlib
       - uses: actions/cache@v2
         env:
