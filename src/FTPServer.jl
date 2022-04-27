@@ -116,7 +116,7 @@ function Server(
     # Note: open(::AbstractCmd, ...) won't work here as it doesn't allow us to capture
     # STDERR.
     io = Pipe()
-    process = run(pipeline(cmd, stdout=io, stderr=io), wait=false)
+    process = run(cmd)
 
     # Grab the Port value from the python script output
     line = readline(io)
