@@ -51,13 +51,11 @@ using Test
         end
     end
 
-    @testset "openssl 1.1.1e" begin
+    @testset "openssl 1.1.1 (f, n, or m)" begin
         FTPServer.serve(".", security=:implicit) do server
             ftp = FTP(uri(server), verify_peer=false)
-            # With OpenSSL 1.1.1e this will fail due to a new EOF change that was added.
-            # https://github.com/openssl/openssl/issues/11381
-            # https://github.com/openssl/openssl/issues/11378
-            @test_broken upload(ftp, "$HOMEDIR/test_download.txt", "/FOO")
+            # TODO: This is currently failing with a `LibCURL error #28`
+            @test upload(ftp, "$HOMEDIR/test_download.txt", "/FOO")
         end
     end
 
